@@ -1,7 +1,7 @@
 // Configuration settings for the project
 const projectConfig = {
     app: {
-        port: parseInt(process.env.PORT) || 3001, // Port on which the server will run
+        port: parseInt(process.env.PORT) || 8000, // Port on which the server will run
     },
     db: {
         url:'mongodb://Asad:Asad123@ac-hxvyoks-shard-00-00.beby7tk.mongodb.net:27017,ac-hxvyoks-shard-00-01.beby7tk.mongodb.net:27017,ac-hxvyoks-shard-00-02.beby7tk.mongodb.net:27017/?ssl=true&replicaSet=atlas-8lbonl-shard-0&authSource=admin&retryWrites=true&w=majority&appName=kora-cluster-1'
