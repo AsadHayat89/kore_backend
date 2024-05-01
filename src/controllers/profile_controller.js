@@ -1,46 +1,45 @@
-const User = require('../model/profile');
+const Profile = require('../model/profile');
 const fs = require('fs');
 const path = require('path');
-async function createUser(req, res) {
+async function createUser(req) {
     try {
         const { fullName, email, education, cv, drivingLicense, categories, interests } = req.body;
         console.log("data here: "+email);
         // Check if email already exists
-        const existingUser = await User.findOne({ email });
+        const existingUser = await Profile.findOne({ email:email });
         if (existingUser) {
             return res.status(400).json({ error: 'Email already exists' });
         }
-
-        const newUser = new User({ fullName, email, education, cv, drivingLicense, categories, interests });
-
-        // Save the user to the database
+        const newUser = new Profile({ fullName, email, education, cv, drivingLicense, categories, interests });
+        // Save the Profile to the database
         const savedUser = await newUser.save();
-        res.status(201).json(savedUser);
+        //res.status(201).json({});
     } catch (error) {
-        res.status(500).json({ error: 'Error creating user: ' + error.message });
+        console.log(error);
+        //res.status(500).json({ error: error });
     }
 }
 
 // Get all users
 async function getUsers(req, res) {
     try {
-        const users = await User.find({});
+        const users = await Profile.find({});
         res.json(users);
     } catch (error) {
         res.status(500).json({ error: 'Error getting users: ' + error.message });
     }
 }
 
-// Get user by ID
+// Get Profile by ID
 async function getUserById(req, res) {
     try {
-        const user = await User.findById(req.params.userId);
-        if (!user) {
-            return res.status(404).json({ error: 'User not found' });
+        const Profile = await Profile.findById(req.params.userId);
+        if (!Profile) {
+            return res.status(404).json({ error: 'Profile not found' });
         }
-        res.json(user);
+        res.json(Profile);
     } catch (error) {
-        res.status(500).json({ error: 'Error getting user by ID: ' + error.message });
+        res.status(500).json({ error: 'Error getting Profile by ID: ' + error.message });
     }
 }
 
@@ -55,14 +54,14 @@ async function updateUser(req, res) {
             return res.status(400).json({ error: 'Email is required' });
         }
 
-        // Find the user by email
-        console.log("User: "+email);
-        const existingUser = await User.findOne({ email });
+        // Find the Profile by email
+        console.log("Profile: "+email);
+        const existingUser = await Profile.findOne({ email });
         if (!existingUser) {
-            return res.status(404).json({ error: 'User not found' });
+            return res.status(404).json({ error: 'Profile not found' });
         }
 
-        // Update the user's data
+        // Update the Profile's data
         existingUser.fullName = fullName;
         existingUser.email = email;
         existingUser.education = education;
@@ -71,27 +70,27 @@ async function updateUser(req, res) {
         existingUser.categories = categories;
         existingUser.interests = interests;
 
-        // Save the updated user data
+        // Save the updated Profile data
         const updatedUser = await existingUser.save();
         const updatea=updatedUser.toObject();
         res.status(200).json({ success: true, data:updatea });
     } catch (error) {
-        res.status(500).json({success: false,data:{}, error: 'Error updating user: ' + error.message });
+        res.status(500).json({success: false,data:{}, error: 'Error updating Profile: ' + error.message });
     }
 }
 
 
 
-// Delete user by ID
+// Delete Profile by ID
 async function deleteUser(req, res) {
     try {
-        const deletedUser = await User.findByIdAndDelete(req.params.userId);
+        const deletedUser = await Profile.findByIdAndDelete(req.params.userId);
         if (!deletedUser) {
-            return res.status(404).json({ error: 'User not found' });
+            return res.status(404).json({ error: 'Profile not found' });
         }
-        res.json({ message: 'User deleted successfully' });
+        res.json({ message: 'Profile deleted successfully' });
     } catch (error) {
-        res.status(500).json({ error: 'Error deleting user: ' + error.message });
+        res.status(500).json({ error: 'Error deleting Profile: ' + error.message });
     }
 }
 

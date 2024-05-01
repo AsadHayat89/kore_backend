@@ -18,7 +18,7 @@ async function createUser(req, res) {
 
         // Create a new user object with hashed password
         const newUser = new User({ username, email, hashedPassword, deviceToken });
-        const profile=profileContrller.createUser(req);
+        await profileContrller.createUser(req);
         // Save the user to the database
         const savedUser = await newUser.save();
         const userResponse = savedUser.toObject();
