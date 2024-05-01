@@ -7,7 +7,8 @@ async function createUser(req, res) {
         const { username, email, password, deviceToken } = req.body;
         
         // Check if email or username already exists
-        const existingUser = await User.findOne({ $or: [{ email }, { username }] });
+        console.log(email);
+        const existingUser = await User.findOne({ email });
         if (existingUser) {
             return res.status(400).json({ success: false, error: 'Email or username already exists' });
         }

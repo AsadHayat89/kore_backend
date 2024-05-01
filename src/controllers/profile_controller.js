@@ -4,7 +4,7 @@ const path = require('path');
 async function createUser(req, res) {
     try {
         const { fullName, email, education, cv, drivingLicense, categories, interests } = req.body;
-
+        console.log("data here: "+email);
         // Check if email already exists
         const existingUser = await User.findOne({ email });
         if (existingUser) {
@@ -47,7 +47,8 @@ async function getUserById(req, res) {
 
 async function updateUser(req, res) {
     try {
-        const { fullName, email, education, cv, drivingLicense, categories, interests } = req.body;
+
+        const { fullName, email, education, cv, drivingLicense, categories, interests } =req.body;
 
         // Check if email is provided
         if (!email) {
@@ -55,6 +56,7 @@ async function updateUser(req, res) {
         }
 
         // Find the user by email
+        console.log("User: "+email);
         const existingUser = await User.findOne({ email });
         if (!existingUser) {
             return res.status(404).json({ error: 'User not found' });
