@@ -21,6 +21,7 @@ const upload = multer({ storage: storage })
 // Define routes and associate with controller methods
 router.post('/create_profile', profileController.createUser);
 router.patch('/update_profile',profileController.updateUser);
+router.get('/user',profileController.getUserByemail);
 // Additional routes (commented out for now)
 router.post('/upload-image', upload.single('image'),profileController.uploadImage);
 

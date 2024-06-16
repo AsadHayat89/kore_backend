@@ -4,9 +4,9 @@ const path = require('path');
 async function createUser(req) {
     try {
         const { fullName, email, education, cv, drivingLicense, categories, interests } = req.body;
-        console.log("data here: "+email);
+        console.log("data here: " + email);
         // Check if email already exists
-        const existingUser = await Profile.findOne({ email:email });
+        const existingUser = await Profile.findOne({ email: email });
         if (existingUser) {
             return res.status(400).json({ error: 'Email already exists' });
         }
@@ -30,6 +30,23 @@ async function getUsers(req, res) {
     }
 }
 
+
+// Get Profile by ID
+async function getUserByemail(req, res) {
+    try {
+        const {email} = req.body;
+        const ProfileData = await Profile.findOne({email});
+        if (!ProfileData) {
+            return res.status(404).json({ error: 'Profile not found' });
+        }
+        res.json(ProfileData);
+    } catch (error) {
+        res.status(500).json({ error: 'Error getting Profile by ID: ' + error.message });
+    }
+}
+
+
+
 // Get Profile by ID
 async function getUserById(req, res) {
     try {
@@ -46,8 +63,12 @@ async function getUserById(req, res) {
 
 async function updateUser(req, res) {
     try {
-
-        const { fullName, email, education, cv, drivingLicense, categories, interests } =req.body;
+        const {
+            fullName, email, userImg, education, cv, drivingLicense, categories,
+            interests, location, friendlyAddress, phoneNumber, minimumPerHourRate,
+            gender, dateOfBirth, jobTitle, category, englishLevel, type, description,
+            mapLocation, showMyProfile, resume
+        } = req.body;
 
         // Check if email is provided
         if (!email) {
@@ -55,27 +76,40 @@ async function updateUser(req, res) {
         }
 
         // Find the Profile by email
-        console.log("Profile: "+email);
+        console.log("Profile: " + email);
         const existingUser = await Profile.findOne({ email });
         if (!existingUser) {
             return res.status(404).json({ error: 'Profile not found' });
         }
 
         // Update the Profile's data
-        existingUser.fullName = fullName;
-        existingUser.email = email;
-        existingUser.education = education;
-        existingUser.cv = cv;
-        existingUser.drivingLicense = drivingLicense;
-        existingUser.categories = categories;
-        existingUser.interests = interests;
-
+        if (isValid(fullName)) existingUser.fullName = fullName;
+        if (isValid(userImg)) existingUser.userImg = userImg;
+        if (isValid(education)) existingUser.education = education;
+        if (isValid(cv)) existingUser.cv = cv;
+        if (isValid(drivingLicense)) existingUser.drivingLicense = drivingLicense;
+        if (isArrayValid(categories)) existingUser.categories = categories;
+        if (isArrayValid(interests)) existingUser.interests = interests;
+        if (isValid(location)) existingUser.location = location;
+        if (isValid(friendlyAddress)) existingUser.friendlyAddress = friendlyAddress;
+        if (isValid(phoneNumber)) existingUser.phoneNumber = phoneNumber;
+        if (isValid(minimumPerHourRate)) existingUser.minimumPerHourRate = minimumPerHourRate;
+        if (isValid(gender)) existingUser.gender = gender;
+        if (isValid(dateOfBirth)) existingUser.dateOfBirth = dateOfBirth;
+        if (isValid(jobTitle)) existingUser.jobTitle = jobTitle;
+        if (isValid(category)) existingUser.category = category;
+        if (isValid(englishLevel)) existingUser.englishLevel = englishLevel;
+        if (isValid(type)) existingUser.type = type;
+        if (isValid(description)) existingUser.description = description;
+        if (isValid(mapLocation)) existingUser.mapLocation = mapLocation;
+        if (isValid(showMyProfile)) existingUser.showMyProfile = showMyProfile;
+        if (isValid(resume)) existingUser.resume = resume;
         // Save the updated Profile data
         const updatedUser = await existingUser.save();
-        const updatea=updatedUser.toObject();
-        res.status(200).json({ success: true, data:updatea });
+        const updatea = updatedUser.toObject();
+        res.status(200).json({ success: true, data: updatea });
     } catch (error) {
-        res.status(500).json({success: false,data:{}, error: 'Error updating Profile: ' + error.message });
+        res.status(500).json({ success: false, data: {}, error: 'Error updating Profile: ' + error.message });
     }
 }
 
@@ -94,6 +128,11 @@ async function deleteUser(req, res) {
     }
 }
 
+const isValid = (value) => value !== undefined && value !== '';
+
+const isArrayValid = (array) => Array.isArray(array) && array.length > 0;
+
+
 async function uploadImage(req, res) {
     try {
         var image = req.file;
@@ -105,7 +144,7 @@ async function uploadImage(req, res) {
             reject(err)
         });
 
-        res.status(201).json({ success: true, body: { url: 'profile/'+pathdata } });
+        res.status(201).json({ success: true, body: { url: 'profile/' + pathdata } });
     }
     catch (e) {
         res.status(500).json({ success: false, body: {}, error: e.message });
@@ -122,7 +161,7 @@ function convertImage(OriginalImage) {
 
 function directryPath() {
     const outputDirectory = path.resolve(__dirname, '../../profile');
-    
+
     if (!fs.existsSync(outputDirectory)) {
         fs.mkdirSync(outputDirectory);
     }
@@ -136,5 +175,6 @@ module.exports = {
     getUserById,
     updateUser,
     deleteUser,
-    uploadImage
+    uploadImage,
+    getUserByemail
 };

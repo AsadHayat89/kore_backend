@@ -27,9 +27,52 @@ const userSchema = new Schema({
     }],
     interests: [{
         type: String
-    }]
+    }],
+    location: {
+        type: String
+    },
+    friendlyAddress: {
+        type: String
+    },
+    phoneNumber: {
+        type: Number
+    },
+    minimumPerHourRate: {
+        type: Number
+    },
+    gender: {
+        type: String
+    },
+    dateOfBirth: {
+        type: Date
+    },
+    jobTitle: {
+        type: String
+    },
+    category: {
+        type: String
+    },
+    englishLevel: {
+        type: String
+    },
+    type: {
+        type: String
+    },
+    description: {
+        type: String
+    },
+    mapLocation: {
+        type: String
+    },
+    showMyProfile: {
+        type: Boolean,
+        default: true
+    },
+    resume: {
+        type: String
+    }
 });
 
-const User = mongoose.model('profile', userSchema);
+const Profile = mongoose.model('profile', userSchema);
 
-module.exports = User;
+module.exports = Profile;

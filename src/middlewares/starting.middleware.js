@@ -1,7 +1,7 @@
 const bodyParser = require('body-parser');
 const express = require('express');
 const cors = require('cors');
-
+const path = require('path');
 /*
   Middleware for setting up the initial configurations of the Express app.
 
@@ -23,6 +23,8 @@ const startingMiddleware = (app) => {
 
     // Serve static files from the 'public' directory
     app.use(express.static('public'));
+    
+    app.use('/profile', express.static(path.join(__dirname, '..', 'profile')));
 
     // Parse incoming JSON requests
     app.use(express.json());
