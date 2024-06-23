@@ -34,7 +34,7 @@ async function getUsers(req, res) {
 // Get Profile by ID
 async function getUserByemail(req, res) {
     try {
-        const {email} = req.body;
+        const {email} = req.query;
         const ProfileData = await Profile.findOne({email});
         if (!ProfileData) {
             return res.status(404).json({ error: 'Profile not found' });
